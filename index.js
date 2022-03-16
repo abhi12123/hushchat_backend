@@ -15,13 +15,26 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
+
   console.log('socket connected:',socket.id);
-  socket.on('join_room',(data)=>{
-      socket.join(data)
+
+  socket.on('send_join_room',(roomData)=>{
+      const {name} = roomData;
+      socket.join(name);
+      console.log(`user ${socket.id} joined in ${name}`)
+      socket.emit("receive_join_room",roomData)
   })
-  socket.on("message",(data)=>{
-      socket.emit("message",data)
+
+  socket.on("send_message",(data)=>{
+      console.log(data)
+        console.log(`user ${socket.id} sent a message to ${data.roomName}`)
+      socket.to(data.roomName).emit("recieve_message",data)
   })
+
+  socket.on('disconnect_user',()=>{
+      socket.disconnect();
+  })
+
   socket.on("disconnect",()=>{
       console.log("socket disconnected",socket.id)
   })
