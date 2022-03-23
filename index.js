@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
   console.log("socket connected:", socket.id);
 
   socket.on("send_join_room", (roomData) => {
-    const { name } = roomData;
+    const { name,username } = roomData;
     socket.join(name);
     console.log(`user ${socket.id} joined in ${name}`);
     socket.emit("receive_join_room", roomData);
@@ -48,11 +48,8 @@ io.on("connection", (socket) => {
     socket.to(data.roomName).emit("recieve_message", data);
   });
 
-  socket.on("check_room", (data) => {
-    console.log(data, io.sockets.adapter.rooms);
-  });
-
   socket.on("disconnect_user", () => {
+    console.log('disconnecting user')
     socket.disconnect();
   });
   socket.on("disconnect", () => {
