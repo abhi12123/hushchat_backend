@@ -3,7 +3,8 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
-app.use(cors());
+const PORT = process.env.port || 3500
+app.use(cors(express.static(__dirname)));
 
 const server = http.createServer(app);
 
@@ -57,6 +58,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3500, () => {
-  console.log("server running on 3500");
+server.listen(PORT, () => {
+  console.log(`server running on ${PORT}`);
 });
